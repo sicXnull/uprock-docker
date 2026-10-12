@@ -1,0 +1,23 @@
+services:
+  uprock:
+    build:
+      context: .
+      args:
+        VERSION: "0.0.37"
+    image: uprock:0.0.37
+    container_name: uprock
+    restart: unless-stopped
+    # Reaps Chromium child processes. The daemon still receives SIGTERM.
+    init: true
+    shm_size: 256mb
+    volumes:
+      - uprock-data:/data
+    healthcheck:
+      test: ["CMD", "uprock", "daemon", "status"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 25s
+
+volumes:
+  uprock-data:
